@@ -80,34 +80,39 @@ const Home = () => {
         <p>Loading...</p>
       ) : (
         <div>
-          {data.map(repo => {
-            const filteredIssues = repo.issues.filter(issue => issue.title.toLowerCase().includes(query.toLowerCase()));
-      
-            if (filteredIssues.length > 0) {
-              return {
-                ...repo,
-                issues: filteredIssues,
+          {data
+            .map(repo => {
+              const filteredIssues = repo.issues.filter(issue => 
+                issue.title.toLowerCase().includes(query.toLowerCase())
+              );
+        
+              if (filteredIssues.length > 0) {
+                return {
+                  ...repo,
+                  issues: filteredIssues,
+                }
               }
-            }
-            return null;
-          }).filter(repo => repo !== null).map((repo, index) => {
-            if (repo?.count === 0) {
               return null;
-            }
+            })
+            .filter((repo): repo is RepoData => repo !== null)
+            .map((repo, index) => {
+              if (repo.count === 0) {
+                return null;
+              }
 
-            return (
-              <div key={index} className="pb-4">
-                <RepoPreview repo={repo} />
-                <ul className="pt-2">
-                  {repo.issues.map((issue, i) => (
-                    <li key={i} className="flex my-3">
-                      <IssuePreview issue={issue} />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            );
-          })}
+              return (
+                <div key={index} className="pb-4">
+                  <RepoPreview repo={repo} />
+                  <ul className="pt-2">
+                    {repo.issues.map((issue, i) => (
+                      <li key={i} className="flex my-3">
+                        <IssuePreview issue={issue} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
         </div>
       )}
     </div>
